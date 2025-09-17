@@ -1,6 +1,6 @@
 # Descomplicando GitHub Actions
 
-Se inscreva na aula ao vivo e gratuita: https://quiz.linuxtips.io/github-actions
+Se inscreva na aula ao vivo e gratuita: <https://quiz.linuxtips.io/github-actions>
 
 Bem-vindo ao **Descomplicando GitHub Actions**! Este projeto foi criado pela comunidade **LINUXtips** para você aprender os conceitos básicos de CI/CD na prática de forma simples e direta.
 
@@ -18,31 +18,35 @@ Neste projeto você aprenderá:
 
 ## Como Começar
 
-1.  **Fork este Repositório:**
+1. **Fork este Repositório:**
     Clique no botão **"Fork"** no canto superior direito desta página para criar uma cópia deste projeto na sua própria conta do GitHub.
 
-2.  **Clone o seu Fork:**
+2. **Clone o seu Fork:**
+
     ```bash
     git clone https://github.com/SEU-USUARIO-GITHUB/LINUXtips-github-actions.git
     cd LINUXtips-github-actions
     ```
 
-3.  **Habilite os GitHub Actions:**
+3. **Habilite os GitHub Actions:**
     Vá para a aba **"Actions"** do seu repositório e clique no botão verde **"I understand my workflows, go ahead and enable them"**.
 
-4.  **Instale as Dependências:**
+4. **Instale as Dependências:**
     Você precisa do Node.js (versão 16 ou superior):
+
     ```bash
     npm install
     ```
 
-5.  **Teste a Aplicação Localmente:**
+5. **Teste a Aplicação Localmente:**
+
     ```bash
     npm start
     ```
+
     Acesse [http://localhost:3000](http://localhost:3000) no seu navegador.
 
-6.  **Execute seu Primeiro Workflow:**
+6. **Execute seu Primeiro Workflow:**
     - Faça uma alteração simples (ex: adicione seu nome no README.md)
     - Faça commit e push
     - Vá para a aba "Actions" e veja seu primeiro workflow rodando!
@@ -86,5 +90,3 @@ Ao completar cada workflow com sucesso, você ganha os badges:
 ---
 
 **Feito pela comunidade LINUXtips.**
-
-
