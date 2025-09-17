@@ -21,7 +21,7 @@ jobs: # definição dos jobs do workflow, que pode conter varios steps
       node-version: ${{ steps.setup.outputs.node-version }}
       challenge-status: ${{ steps.challenge.outputs.status }}
 
-    steps:
+    steps: # passos do job
       - name: "Checkout do código"
         uses: actions/checkout@v4
 
