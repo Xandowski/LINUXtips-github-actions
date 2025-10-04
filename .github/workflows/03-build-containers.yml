@@ -14,7 +14,6 @@ env:
   CHALLENGE_NAME: "containers-e-seguranca"
   REGISTRY: ghcr.io
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  DOCKER_TAG: ""
 
 jobs:
   build-scan-and-push:
@@ -44,18 +43,18 @@ jobs:
 
       - name: "Lowercase Docker TAG"
         run: |
-          DOCKER_TAG=$(echo ${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]')
+          DOCKER_TAG=$(echo ${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]') >> $GITHUB_ENV
           echo "Lowercase Docker TAG: $DOCKER_TAG"
       - name: "Realizar o build"
         uses: "docker/build-push-action@v6"
         with:
           load: true
-          tags: ${{ env.DOCKER_TAG }}
+          tags: $DOCKER_TAG
 
       - name: "Scan de Vulnerabilidades - Trivy Report"
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.DOCKER_TAG }}
+          image-ref: ${{ env.REGISTRY }}/$DOCKER_TAG
           format: "table"
           output: "trivy-report.txt"
           exit-code: "1"
@@ -72,7 +71,7 @@ jobs:
         uses: "docker/build-push-action@v6"
         with:
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.DOCKER_TAG }}
+          tags: ${{ env.REGISTRY }}/$DOCKER_TAG
 
   generate-certificate: # DAQUI PARA BAIXO, NÃO ALTERAR
     name: "Desafio Nível 3 - Certificado"
