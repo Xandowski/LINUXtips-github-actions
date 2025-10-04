@@ -3,7 +3,7 @@ name: "Nível 3: Containers e Segurança"
 on:
   pull_request:
     types: [closed]
-    branches: [ desafio-nivel-3 ]
+    branches: [desafio-nivel-3]
 
 permissions:
   contents: read
@@ -13,15 +13,61 @@ env:
   CHALLENGE_LEVEL: 3
   CHALLENGE_NAME: "containers-e-seguranca"
   REGISTRY: ghcr.io
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build-scan-and-push:
     name: "Build, Lint, Trivy Scan e Push no GHCR"
-    if: #????
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
       # AQUI VAI O CÓDIGO DO DESAFIO :)
+      - name: "Checkout do código"
+        uses: actions/checkout@v5
+
+      - name: "Dockerfile Lint - Hadolint"
+        run: docker run --rm -i hadolint/hadolint < Dockerfile > lint-report.txt
+
+      - name: "Upload lint-report.txt"
+        uses: actions/upload-artifact@v4
+        with:
+          path: lint-report.txt
+
+      - name: "Realizar login no Registry"
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Realizar o build"
+        uses: "docker/build-push-action@v6"
+        with:
+          load: true
+          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: "Scan de Vulnerabilidades - Trivy Report"
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: "${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }}"
+          format: "table"
+          output: "trivy-report.txt"
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: "os,library"
+          severity: "CRITICAL"
+
+      - name: "Upload trivy-report.txt"
+        uses: actions/upload-artifact@v4
+        with:
+          path: trivy-report.txt
+
+      - name: "Realizar o push"
+        uses: "docker/build-push-action@v6"
+        with:
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }}
 
   generate-certificate: # DAQUI PARA BAIXO, NÃO ALTERAR
     name: "Desafio Nível 3 - Certificado"
