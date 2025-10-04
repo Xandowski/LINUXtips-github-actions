@@ -53,7 +53,7 @@ jobs:
       - name: "Scan de Vulnerabilidades - Trivy Report"
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref: "${{ env.DOCKER_tAG }}"
+          image-ref: "${{ env.DOCKER_TAG }}"
           format: "table"
           output: "trivy-report.txt"
           exit-code: "1"
@@ -70,7 +70,7 @@ jobs:
         uses: "docker/build-push-action@v6"
         with:
           push: true
-          tags: ${{ env.DOCKER_tAG }}
+          tags: ${{ env.DOCKER_TAG }}
 
   generate-certificate: # DAQUI PARA BAIXO, NÃO ALTERAR
     name: "Desafio Nível 3 - Certificado"
