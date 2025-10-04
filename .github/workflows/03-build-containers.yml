@@ -50,7 +50,7 @@ jobs:
         uses: "docker/build-push-action@v6"
         with:
           load: true
-          tags: $DOCKER_TAG
+          tags: ${{ env.DOCKER_TAG }}
 
       - name: "Scan de Vulnerabilidades - Trivy Report"
         uses: aquasecurity/trivy-action@0.28.0
