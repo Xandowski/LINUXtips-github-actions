@@ -41,21 +41,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: "Lowercase Docker TAG"
-        id: docker_tag
-        run: |
-          echo "DOCKER_TAG=${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]'" >> $GITHUB_OUTPUT
-          echo "Lowercase Docker TAG: ${{ steps.docker_tag.outputs.DOCKER_TAG }}"
       - name: "Realizar o build"
         uses: "docker/build-push-action@v6"
         with:
           load: true
-          tags: ${{ steps.docker_tag.outputs.DOCKER_TAG }}
+          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]'
 
       - name: "Scan de Vulnerabilidades - Trivy Report"
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ steps.docker_tag.outputs.DOCKER_TAG }}
+          image-ref: "${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]'"
           format: "table"
           output: "trivy-report.txt"
           exit-code: "1"
@@ -72,7 +67,7 @@ jobs:
         uses: "docker/build-push-action@v6"
         with:
           push: true
-          tags: ${{ env.REGISTRY }}/${{ steps.docker_tag.outputs.DOCKER_TAG }}
+          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]'
 
   generate-certificate: # DAQUI PARA BAIXO, NÃO ALTERAR
     name: "Desafio Nível 3 - Certificado"
