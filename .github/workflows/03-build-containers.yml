@@ -20,9 +20,12 @@ jobs:
     name: "Build, Lint, Trivy Scan e Push no GHCR"
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    env:
+      DOCKER_TAG: $REGISTRY/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]'
 
     steps:
       # AQUI VAI O CÓDIGO DO DESAFIO :)
+
       - name: "Checkout do código"
         uses: actions/checkout@v5
 
@@ -45,12 +48,12 @@ jobs:
         uses: "docker/build-push-action@v6"
         with:
           load: true
-          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]'
+          tags: ${{ env.DOCKER_TAG }}
 
       - name: "Scan de Vulnerabilidades - Trivy Report"
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref: "${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]'"
+          image-ref: "${{ env.DOCKER_tAG }}"
           format: "table"
           output: "trivy-report.txt"
           exit-code: "1"
@@ -67,7 +70,7 @@ jobs:
         uses: "docker/build-push-action@v6"
         with:
           push: true
-          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]'
+          tags: ${{ env.DOCKER_tAG }}
 
   generate-certificate: # DAQUI PARA BAIXO, NÃO ALTERAR
     name: "Desafio Nível 3 - Certificado"
