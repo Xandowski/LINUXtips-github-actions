@@ -45,7 +45,7 @@ jobs:
       - name: "Lowercase Docker TAG"
         run: |
           DOCKER_TAG=$(echo ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]')
-          echo "Lowercase Docker TAG: $ {{ env.DOCKER_TAG }}"
+          echo "Lowercase Docker TAG: ${{ env.DOCKER_TAG }}"
       - name: "Realizar o build"
         uses: "docker/build-push-action@v6"
         with:
