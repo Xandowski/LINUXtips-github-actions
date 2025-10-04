@@ -42,19 +42,20 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Lowercase Docker TAG"
+        id: docker_tag
         run: |
-          DOCKER_TAG=$(echo ${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]') >> $GITHUB_ENV
-          echo "Lowercase Docker TAG: $DOCKER_TAG"
+          echo "DOCKER_TAG=${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]'" >> $GITHUB_OUTPUT
+          echo "Lowercase Docker TAG: ${{ steps.docker_tag.outputs.DOCKER_TAG }}"
       - name: "Realizar o build"
         uses: "docker/build-push-action@v6"
         with:
           load: true
-          tags: $DOCKER_TAG
+          tags: ${{ steps.docker_tag.outputs.DOCKER_TAG }}
 
       - name: "Scan de Vulnerabilidades - Trivy Report"
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref: ${{ env.REGISTRY }}/$DOCKER_TAG
+          image-ref: ${{ env.REGISTRY }}/${{ steps.docker_tag.outputs.DOCKER_TAG }}
           format: "table"
           output: "trivy-report.txt"
           exit-code: "1"
@@ -71,7 +72,7 @@ jobs:
         uses: "docker/build-push-action@v6"
         with:
           push: true
-          tags: ${{ env.REGISTRY }}/$DOCKER_TAG
+          tags: ${{ env.REGISTRY }}/${{ steps.docker_tag.outputs.DOCKER_TAG }}
 
   generate-certificate: # DAQUI PARA BAIXO, NÃO ALTERAR
     name: "Desafio Nível 3 - Certificado"
