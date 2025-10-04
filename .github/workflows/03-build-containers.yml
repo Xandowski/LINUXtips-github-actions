@@ -43,7 +43,9 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Lowercase Docker TAG"
-        run: DOCKER_TAG=$(echo ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]')
+        run: |
+          DOCKER_TAG=$(echo ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]')
+          echo "Lowercase Docker TAG: $ {{ env.DOCKER_TAG }}"
       - name: "Realizar o build"
         uses: "docker/build-push-action@v6"
         with:
@@ -53,7 +55,7 @@ jobs:
       - name: "Scan de Vulnerabilidades - Trivy Report"
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref: "${{ env.DOCKER_TAG }}"
+          image-ref: ${{ env.DOCKER_TAG }}
           format: "table"
           output: "trivy-report.txt"
           exit-code: "1"
