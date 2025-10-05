@@ -20,8 +20,6 @@ jobs:
     name: "Build, Lint, Trivy Scan e Push no GHCR"
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    env:
-      DOCKER_TAG: $REGISTRY/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]'
 
     steps:
       # AQUI VAI O CÓDIGO DO DESAFIO :)
@@ -43,6 +41,9 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Configura DOCKER_TAG"
+        run: echo "DOCKER_TAG=$(echo $REGISTRY/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]')" >> GITHUB_ENV
 
       - name: "Realizar o build"
         uses: "docker/build-push-action@v6"
