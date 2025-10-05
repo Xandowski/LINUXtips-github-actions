@@ -43,7 +43,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Configura DOCKER_TAG"
-        run: echo "DOCKER_TAG=$(echo $REGISTRY/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]')" >> GITHUB_ENV
+        run: echo "DOCKER_TAG=$(echo $REGISTRY/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} | tr '[A-Z]' '[a-z]')" >> $GITHUB_ENV
 
       - name: "Realizar o build"
         uses: "docker/build-push-action@v6"
