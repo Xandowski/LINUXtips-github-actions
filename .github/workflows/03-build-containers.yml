@@ -65,6 +65,7 @@ jobs:
       - name: "Upload trivy-report.txt"
         uses: actions/upload-artifact@v4
         with:
+          name: trivy-report-artifact-${{ github.job }}-${{ github.run_id }}
           path: ${{ env.TRIVY_OUTPUT }}
 
       - name: "Realizar o push"
