@@ -65,7 +65,7 @@ jobs:
       - name: "Upload trivy-report.txt"
         uses: actions/upload-artifact@v4
         with:
-          path: trivy-report.txt
+          path: ${{ env.TRIVY_OUTPUT }}
 
       - name: "Realizar o push"
         uses: "docker/build-push-action@v6"
